@@ -1,0 +1,20 @@
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# PyCharm
+.idea/
+
+# Secrets
+.env
+.env.*
+
+# Generated files
+uploads/
+exports/
