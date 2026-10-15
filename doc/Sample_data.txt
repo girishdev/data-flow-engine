@@ -1,0 +1,9 @@
+
+signal_name         => (ag_g_Eco, cc_p_Abc & etc.)
+application         => (ag, acc, cc & etc.)
+signal_direction    => (g, i, p & a)
+factor              => (2, 4, 0.5 & etc.)
+safety              => (True / False)
+status              => (draft / proposal / accepted / final)
+description         => (describing the signals)
+
