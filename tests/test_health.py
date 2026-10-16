@@ -12,4 +12,4 @@ def test_health_check():
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
     assert response.json()["service"] == "DataFlowEngine"
-    assert response.json()["version"] == "0.1.0"
+    assert response.json()["version"] == "0.2.0"
