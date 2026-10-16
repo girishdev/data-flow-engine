@@ -2,3 +2,6 @@
 fastapi[standard]
 openpyxl
 pytest
+sqlalchemy
+pymysql
+python-dotenv

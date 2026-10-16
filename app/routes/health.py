@@ -11,5 +11,5 @@ def health_check() -> HealthResponse:
     return HealthResponse(
         status="ok",
         service="DataFlowEngine",
-        version="0.2.0"
+        version="0.3.0"
     )
