@@ -9,6 +9,7 @@ from fastapi import (
     UploadFile,
     Depends
 )
+from fastapi.responses import StreamingResponse
 from openpyxl.utils.exceptions import InvalidFileException
 
 from app.schemas.excel import ExcelPreviewResponse
@@ -16,6 +17,8 @@ from app.services.excel_service import (
     ExcelValidationError,
     extract_excel_data
 )
+from app.services.excel_export_service import generate_excel
+from app.services.automation_service import get_automation_by_request_id
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -189,3 +192,50 @@ def upload_and_store_excel(
         total_records=result["total_records"],
         message="Excel data stored successfully"
     )
+
+
+@router.get("/files/{request_id}/download")
+def download_excel(
+    request_id: str,
+    db: Session = Depends(get_db)
+):
+    try:
+        automation = get_automation_by_request_id(
+            db=db,
+            request_id=request_id
+        )
+    except SQLAlchemyError as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Database operation failed"
+        ) from exc
+
+    if automation is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Request ID not found"
+        )
+
+    try:
+        output = generate_excel(automation.data)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Stored Excel data is invalid"
+        ) from exc
+
+    download_name = f"{automation.request_id}.xlsx"
+
+    return StreamingResponse(
+        output,
+        media_type=(
+            "application/vnd.openxmlformats-officedocument."
+            "spreadsheetml.sheet"
+        ),
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="{download_name}"'
+            )
+        }
+    )
+

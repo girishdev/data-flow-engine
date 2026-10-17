@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from secrets import token_hex
 
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 
 from app.models.database_models import User, DataAutomation
 
@@ -51,3 +52,15 @@ def save_automation(
     except Exception:
         db.rollback()
         raise
+
+
+def get_automation_by_request_id(
+    db: Session,
+    request_id: str
+) -> DataAutomation | None:
+
+    statement = select(DataAutomation).where(
+        DataAutomation.request_id == request_id
+    )
+
+    return db.scalars(statement).first()

@@ -8,7 +8,7 @@ from app.routes.files import router as files_router
 app = FastAPI(
     title="DataFlowEngine API",
     description="Data Processing and Workflow Automation",
-    version="0.3.0"
+    version="0.4.0"
 )
 
 app.include_router(
